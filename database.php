@@ -22,6 +22,12 @@
 			die("Connection failed: " . mysqli_connect_error());
 		} 
 
+		$user_id = 0;
+		$user_name = "";
+		$user_sex = "";
+		$user_position = "";
+		$isEdited = false;
+
 	?>
 
 	<div class="w-100 d-flex justify-content-center mt-5">
@@ -57,7 +63,11 @@
 									<td><?php echo $username; ?></td>
 									<td><?php echo $sex; ?></td>
 									<td><?php echo $position; ?></td>
-									<td><a class="btn btn-danger" href="database.php?delete=<?php echo $userId; ?>">Delete</a></td>
+									<td class="d-flex align-items-center">
+										<a class="btn btn-warning" href="database.php?edit=<?php echo $userId; ?>">Edit</a>
+										<div style="width: 10px;"></div>
+										<a class="btn btn-danger" href="database.php?delete=<?php echo $userId; ?>">Delete</a>
+									</td>
 								</tr>
 
 
@@ -93,6 +103,44 @@
 	?>
 
 
+	<?php
+
+		if (isset($_GET['edit'])) {
+			$userId = $_GET['edit'];
+
+			$query = "SELECT * FROM users WHERE user_id = $userId";
+			$result = mysqli_query($conn, $query);
+
+			if (mysqli_num_rows($result) == 1) {
+				$row = mysqli_fetch_assoc($result);
+
+				$user_name = $row['username'];
+				$user_sex = $row['sex'];
+				$user_position = $row['position'];
+				$user_id = $row['user_id'];
+				$isEdited = true;
+			}
+		}
+
+		if (isset($_POST['update_user'])) {
+			$userId = $_POST['id'];
+			$username = mysqli_real_escape_string($conn, $_POST['usename']);
+			$sex = mysqli_real_escape_string($conn, $_POST['sex']);
+			$position = mysqli_real_escape_string($conn, $_POST['position']);
+
+			$query = "UPDATE users SET username = '$username', sex = '$sex', position = '$position' WHERE user_id = $userId";
+			$result = mysqli_query($conn, $query);
+
+			if (!$result) {
+				echo "<script>alert('Erorr update user!')</script>";
+			} else {
+				header('Location: database.php');
+			}
+		}
+
+	?>
+
+
 
 
 	<?php
@@ -108,7 +156,6 @@
 			if (!$result) {
 				echo "<script>alert('Erorr create user!')</script>";
 			} else {
-				echo "<script>alert('Create user successfully!')</script>";
 				header('Location: database.php');
 			}
 		}
@@ -119,15 +166,17 @@
 
 
 
-	<div class="w-100 d-flex justify-content-center mt-5">
+	<div class="w-100 d-flex justify-content-center my-5">
 		<form action="database.php" method="POST" class="w-50">
+			<input type="hidden" name="id" value="<?php echo $user_id; ?>">
 			<div class="form-group mb-3">
 				<label>Username:</label>
-				<input type="text" name="usename" class="form-control">
+				<input type="text" name="usename" value="<?php echo $user_name; ?>" class="form-control">
 			</div>
 			<div class="form-group mb-3">
 				<label>Sex:</label>
 				<select class="form-select" name="sex">
+				  <option value="<?php echo $user_sex; ?>"><?php echo $user_sex ?: "Select options"; ?></option>
 				  <option value="Male">Male</option>
 				  <option value="Female">Female</option>
 				  <option value="Other">Other</option>
@@ -135,9 +184,9 @@
 			</div>
 			<div class="form-group mb-3">
 				<label>Position:</label>
-				<input type="text" name="position" class="form-control">
+				<input type="text" name="position" value="<?php echo $user_position; ?>" class="form-control">
 			</div>
-			<input type="submit" name="create_user" class="btn btn-primary" value="Create User">
+			<input type="submit" name="<?php echo $isEdited ? 'update_user' : 'create_user'; ?>" class="btn btn-<?php echo $isEdited ? 'warning' : 'primary'; ?>" value="<?php echo $isEdited ? 'Update User' : 'Create User'; ?>">
 		</form>
 	</div>
 
