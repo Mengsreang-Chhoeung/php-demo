@@ -66,6 +66,8 @@
 									<td class="d-flex align-items-center">
 										<a class="btn btn-warning" href="database.php?edit=<?php echo $userId; ?>">Edit</a>
 										<div style="width: 10px;"></div>
+										<a class="btn btn-info" href="database2.php?detail=<?php echo $userId; ?>">Detail</a>
+										<div style="width: 10px;"></div>
 										<a class="btn btn-danger" href="database.php?delete=<?php echo $userId; ?>">Delete</a>
 									</td>
 								</tr>
