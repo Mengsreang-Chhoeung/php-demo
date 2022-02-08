@@ -28,10 +28,43 @@
 		$user_position = "";
 		$isEdited = false;
 
+
+		if (isset($_GET['limit'])) {
+			$lim = $_GET['limit'];
+		} else {
+			$lim = "";
+		}
+
+		if ($lim == 0 || empty($lim)) {
+			$limit = 5;
+		} else {
+			$limit = $lim;
+		}
+
+		if (isset($_GET['page'])) {
+			$pag = $_GET['page'];
+		} else {
+			$pag = "";
+		}
+
+		if ($pag == 0 || empty($pag)) {
+			$page = 0;
+		} else {
+			$page = $pag;
+		}
+
+		if ($page == 0) {
+			$pagination = 1;
+		} else {
+			$pagination = $page;
+		}
+
+		$offset = ceil( $pagination * $limit ) - $limit;
+
 	?>
 
 	<div class="w-100 d-flex justify-content-center mt-5">
-		<table class="table table-bordered w-50">
+		<table class="table table-bordered w-50 table-hover">
 			<thead>
 				<tr>
 					<th>ID</th>
@@ -45,7 +78,7 @@
 
 				<?php
 
-					$query = "SELECT * FROM users";
+					$query = "SELECT * FROM users LIMIT $limit OFFSET $offset";
 					$result = mysqli_query($conn, $query);
 
 					if (mysqli_num_rows($result) > 0) {
