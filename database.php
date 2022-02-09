@@ -80,6 +80,11 @@
 
 					$query = "SELECT * FROM users LIMIT $limit OFFSET $offset";
 					$result = mysqli_query($conn, $query);
+					$queryCount = "SELECT * FROM users";
+					$resultCount = mysqli_query($conn, $queryCount);
+
+					$count = mysqli_num_rows($resultCount);
+					$countPage = ceil( $count / $limit );
 
 					if (mysqli_num_rows($result) > 0) {
 						while ($row = mysqli_fetch_assoc($result)) {
@@ -114,6 +119,40 @@
 			</tbody>
 		</table>
 	</div>
+
+
+	<nav class="w-100 d-flex justify-content-center">
+	  <ul class="pagination">
+	    <!-- <li class="page-item disabled">
+	      <a class="page-link">Previous</a>
+	    </li> -->
+
+
+
+	    <?php
+
+	    	for ($i = 1; $i <= $countPage ; $i++) { 
+	    		?>
+
+	    			<li class="page-item <?php echo $pagination == $i ? 'active' : ''; ?>"><a class="page-link" href="database.php?limit=<?php echo $limit; ?>&page=<?php echo $i; ?>"><?php echo $i; ?></a></li>
+
+	    		<?php
+	    	}
+
+	    ?>
+
+
+
+
+	    <!-- <li class="page-item active" aria-current="page">
+	      <a class="page-link" href="#">2</a>
+	    </li>
+	    <li class="page-item"><a class="page-link" href="#">3</a></li> -->
+	    <!-- <li class="page-item">
+	      <a class="page-link" href="#">Next</a>
+	    </li> -->
+	  </ul>
+	</nav>
 
 
 
