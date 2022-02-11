@@ -121,12 +121,11 @@
 	</div>
 
 
-	<nav class="w-100 d-flex justify-content-center">
-	  <ul class="pagination">
-	    <!-- <li class="page-item disabled">
-	      <a class="page-link">Previous</a>
-	    </li> -->
-
+	<nav class="w-100 d-flex justify-content-center align-items-center">
+	  <ul class="pagination m-0 p-0">
+	    <li class="page-item <?php echo $pagination == 1 ? 'disabled' : ''; ?>">
+	      <a class="page-link" href="database.php?limit=<?php echo $limit; ?>&page=<?php echo $pagination - 1; ?>">Previous</a>
+	    </li>
 
 
 	    <?php
@@ -141,17 +140,23 @@
 
 	    ?>
 
-
-
-
-	    <!-- <li class="page-item active" aria-current="page">
-	      <a class="page-link" href="#">2</a>
+	    <li class="page-item <?php echo $pagination >= $countPage ? 'disabled' : '' ?>">
+	      <a class="page-link" href="database.php?limit=<?php echo $limit; ?>&page=<?php echo $pagination + 1; ?>">Next</a>
 	    </li>
-	    <li class="page-item"><a class="page-link" href="#">3</a></li> -->
-	    <!-- <li class="page-item">
-	      <a class="page-link" href="#">Next</a>
-	    </li> -->
 	  </ul>
+
+	  <div style="width: 20px;"></div>
+
+	  <div class="d-flex align-items-center" style="width: 200px;">
+		<select class="form-select" style="width: 50%;" id="page__limit">
+			<option><?php echo $limit; ?></option>
+			<option>5</option>
+			<option>15</option>
+			<option>25</option>
+			<option>100</option>
+		</select>
+		<span style="width: 45%; margin-left: 5%;"> / Page</span>
+	  </div>
 	</nav>
 
 
@@ -264,5 +269,16 @@
 		</form>
 	</div>
 
+
+
+	<script type="text/javascript">
+		
+		const pageLimit = document.querySelector("#page__limit");
+		pageLimit.addEventListener("change", function(e) {
+			const value = e.currentTarget.value;
+			window.location.href = `database.php?limit=${value}&page=<?php echo $pagination; ?>`;
+		});
+
+	</script>
 </body>
 </html>
