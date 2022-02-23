@@ -61,9 +61,22 @@
 
 		$offset = ceil( $pagination * $limit ) - $limit;
 
+		if (isset($_GET['q'])) {
+			$q = $_GET['q'];
+		} else {
+			$q = "";
+		}
+
 	?>
 
 	<div class="w-100 d-flex justify-content-center mt-5">
+		<form class="d-flex" id="search__box">
+	        <input class="form-control me-2" type="search" value="<?php echo $q; ?>" placeholder="Search name" aria-label="Search" id="search__input">
+	        <button class="btn btn-outline-success" type="submit">Search</button>
+	    </form>
+	</div>
+
+	<div class="w-100 d-flex justify-content-center mt-3">
 		<table class="table table-bordered w-50 table-hover">
 			<thead>
 				<tr>
@@ -78,9 +91,9 @@
 
 				<?php
 
-					$query = "SELECT * FROM users LIMIT $limit OFFSET $offset";
+					$query = "SELECT * FROM users WHERE LOWER( username ) LIKE LOWER ( '%$q%' ) LIMIT $limit OFFSET $offset";
 					$result = mysqli_query($conn, $query);
-					$queryCount = "SELECT * FROM users";
+					$queryCount = "SELECT * FROM users WHERE LOWER( username ) LIKE LOWER ( '%$q%' )";
 					$resultCount = mysqli_query($conn, $queryCount);
 
 					$count = mysqli_num_rows($resultCount);
@@ -113,7 +126,7 @@
 
 							<?php
 						}
-					} else echo "0 data";
+					}
 				?>
 
 			</tbody>
@@ -276,7 +289,20 @@
 		const pageLimit = document.querySelector("#page__limit");
 		pageLimit.addEventListener("change", function(e) {
 			const value = e.currentTarget.value;
-			window.location.href = `database.php?limit=${value}&page=<?php echo $pagination; ?>`;
+			window.location.href = `database.php?limit=${value}&page=0`;
+		});
+
+		const searchBar = document.querySelector("#search__box");
+		const searchValue = searchBar.querySelector("#search__input");
+		searchBar.addEventListener("submit", function(e) {
+			e.preventDefault();
+			window.location.href = `database.php?limit=<?php echo $limit; ?>&page=0&q=${searchValue.value}`;
+		});
+
+		searchValue.addEventListener("input", function(e) {
+			const value = e.currentTarget.value;
+
+			if (value.length === 0) window.location.href = `database.php?limit=<?php echo $limit; ?>&page=0&q=`;
 		});
 
 	</script>
