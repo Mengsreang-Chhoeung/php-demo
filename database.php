@@ -67,6 +67,20 @@
 			$q = "";
 		}
 
+		if (isset($_GET['sortBy'])) {
+			$sort = $_GET['sortBy'];
+		} else {
+			$sort = "";
+		}
+
+		if (empty($sort)) {
+			$sortBy = "DESC";
+		} else if ($sort === "Old") {
+			$sortBy = "ASC";
+		} else {
+			$sortBy = "DESC";
+		}
+
 	?>
 
 	<div class="w-100 d-flex justify-content-center mt-5">
@@ -74,6 +88,16 @@
 	        <input class="form-control me-2" type="search" value="<?php echo $q; ?>" placeholder="Search name" aria-label="Search" id="search__input">
 	        <button class="btn btn-outline-success" type="submit">Search</button>
 	    </form>
+	    <div style="width: 20px;"></div>
+			<div class="d-flex align-items-center" style="width: 200px;">
+			  	<span style="width: 45%; margin-right: 5%;">Sort by: </span>
+			  	<select class="form-select" style="width: 50%;" id="sort__by">
+			  		<option><?php echo $sort === "" ? "New" : $sort ?></option>
+				  	<option>New</option>
+				  	<option>Old</option>
+				</select>
+			</div>
+		</div>
 	</div>
 
 	<div class="w-100 d-flex justify-content-center mt-3">
@@ -91,7 +115,7 @@
 
 				<?php
 
-					$query = "SELECT * FROM users WHERE LOWER( username ) LIKE LOWER ( '%$q%' ) LIMIT $limit OFFSET $offset";
+					$query = "SELECT * FROM users WHERE LOWER( username ) LIKE LOWER ( '%$q%' ) ORDER BY user_id $sortBy LIMIT $limit OFFSET $offset";
 					$result = mysqli_query($conn, $query);
 					$queryCount = "SELECT * FROM users WHERE LOWER( username ) LIKE LOWER ( '%$q%' )";
 					$resultCount = mysqli_query($conn, $queryCount);
@@ -296,13 +320,20 @@
 		const searchValue = searchBar.querySelector("#search__input");
 		searchBar.addEventListener("submit", function(e) {
 			e.preventDefault();
-			window.location.href = `database.php?limit=<?php echo $limit; ?>&page=0&q=${searchValue.value}`;
+			window.location.href = `database.php?limit=<?php echo $limit; ?>&page=0&q=${searchValue.value}&sortBy=<?php echo $sort; ?>`;
 		});
 
 		searchValue.addEventListener("input", function(e) {
 			const value = e.currentTarget.value;
 
 			if (value.length === 0) window.location.href = `database.php?limit=<?php echo $limit; ?>&page=0&q=`;
+		});
+
+		const sortBy = document.querySelector("#sort__by");
+		sortBy.addEventListener("change", function(e) {
+			const value = e.currentTarget.value;
+
+			window.location.href = `database.php?limit<?php echo $limit; ?>&page=0&q=${searchValue.value}&sortBy=${value}`;
 		});
 
 	</script>
