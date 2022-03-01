@@ -28,6 +28,8 @@
 		$user_position = "";
 		$isEdited = false;
 
+		$username_error = "";
+
 
 		if (isset($_GET['limit'])) {
 			$lim = $_GET['limit'];
@@ -266,8 +268,16 @@
 			$sex = mysqli_real_escape_string($conn, $_POST['sex']);
 			$position = mysqli_real_escape_string($conn, $_POST['position']);
 
-			$query = "INSERT INTO users (username, sex, position) VALUES ('$username', '$sex', '$position')";
-			$result = mysqli_query($conn, $query);
+			$existByUsernameQuery = "SELECT user_id FROM users WHERE BINARY username = '$username'";
+			$existByUsernameQueryResult = mysqli_query($conn, $existByUsernameQuery);
+
+			if (mysqli_num_rows($existByUsernameQueryResult) > 0)
+				die("Username already exists!");
+				// $username_error = "Username already exists!";
+			else {
+				$query = "INSERT INTO users (username, sex, position) VALUES ('$username', '$sex', '$position')";
+				$result = mysqli_query($conn, $query);
+			}
 
 			if (!$result) {
 				echo "<script>alert('Erorr create user!')</script>";
@@ -279,15 +289,13 @@
 
 
 
-
-
-
 	<div class="w-100 d-flex justify-content-center my-5">
 		<form action="database.php" method="POST" class="w-50">
 			<input type="hidden" name="id" value="<?php echo $user_id; ?>">
 			<div class="form-group mb-3">
 				<label>Username:</label>
 				<input type="text" name="usename" value="<?php echo $user_name; ?>" class="form-control">
+				<small class="text-danger"><?php echo $username_error; ?></small>
 			</div>
 			<div class="form-group mb-3">
 				<label>Sex:</label>
