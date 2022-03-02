@@ -29,6 +29,8 @@
 		$isEdited = false;
 
 		$username_error = "";
+		$user_sex_error = "";
+		$user_position_error = "";
 
 
 		if (isset($_GET['limit'])) {
@@ -268,21 +270,30 @@
 			$sex = mysqli_real_escape_string($conn, $_POST['sex']);
 			$position = mysqli_real_escape_string($conn, $_POST['position']);
 
+			$user_name = $username;
+			$user_sex = $sex;
+			$user_position = $position;
+
+			if (empty($username)) $username_error = "Username is required!";
+			if (empty($sex)) $user_sex_error = "Sex is required!";
+			if (empty($position)) $user_position_error = "Position is required!";
+
 			$existByUsernameQuery = "SELECT user_id FROM users WHERE BINARY username = '$username'";
 			$existByUsernameQueryResult = mysqli_query($conn, $existByUsernameQuery);
 
-			if (mysqli_num_rows($existByUsernameQueryResult) > 0)
-				die("Username already exists!");
-				// $username_error = "Username already exists!";
-			else {
-				$query = "INSERT INTO users (username, sex, position) VALUES ('$username', '$sex', '$position')";
-				$result = mysqli_query($conn, $query);
-			}
+			if (!empty($username) && !empty($sex) && !empty($position)) {
+				if (mysqli_num_rows($existByUsernameQueryResult) > 0)
+					$username_error = "Username already exists!";
+				else {
+					$query = "INSERT INTO users (username, sex, position) VALUES ('$username', '$sex', '$position')";
+					$result = mysqli_query($conn, $query);
 
-			if (!$result) {
-				echo "<script>alert('Erorr create user!')</script>";
-			} else {
-				header('Location: database.php');
+					if (!$result) {
+						echo "<script>alert('Erorr create user!')</script>";
+					} else {
+						header('Location: database.php');
+					}
+				}
 			}
 		}
 	?>
@@ -305,10 +316,12 @@
 				  <option value="Female">Female</option>
 				  <option value="Other">Other</option>
 				</select>
+				<small class="text-danger"><?php echo $user_sex_error; ?></small>
 			</div>
 			<div class="form-group mb-3">
 				<label>Position:</label>
 				<input type="text" name="position" value="<?php echo $user_position; ?>" class="form-control">
+				<small class="text-danger"><?php echo $user_position_error; ?></small>
 			</div>
 			<input type="submit" name="<?php echo $isEdited ? 'update_user' : 'create_user'; ?>" class="btn btn-<?php echo $isEdited ? 'warning' : 'primary'; ?>" value="<?php echo $isEdited ? 'Update User' : 'Create User'; ?>">
 		</form>
