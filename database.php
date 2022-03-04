@@ -248,13 +248,41 @@
 			$sex = mysqli_real_escape_string($conn, $_POST['sex']);
 			$position = mysqli_real_escape_string($conn, $_POST['position']);
 
-			$query = "UPDATE users SET username = '$username', sex = '$sex', position = '$position' WHERE user_id = $userId";
-			$result = mysqli_query($conn, $query);
+			$user_sex = $sex;
+			$user_position = $position;
 
-			if (!$result) {
-				echo "<script>alert('Erorr update user!')</script>";
-			} else {
-				header('Location: database.php');
+			if (empty($username)) $username_error = "Username is required!";
+			if (empty($sex)) $user_sex_error = "Sex is required!";
+			if (empty($position)) $user_position_error = "Position is required!";
+
+			$existByUsernameQuery = "SELECT user_id FROM users WHERE BINARY username = '$username'";
+			$existByUsernameQueryResult = mysqli_query($conn, $existByUsernameQuery);
+
+			if (!empty($username) && !empty($sex) && !empty($position)) {
+				if ($user_name !== $username) {
+					if (mysqli_num_rows($existByUsernameQueryResult) > 0) {
+						$user_name = $username;
+						$username_error = "Username already exists!";
+					} else {
+						$query = "UPDATE users SET username = '$username', sex = '$sex', position = '$position' WHERE user_id = $userId";
+						$result = mysqli_query($conn, $query);
+
+						if (!$result) {
+							echo "<script>alert('Erorr update user!')</script>";
+						} else {
+							header('Location: database.php');
+						}
+					}
+				} else {
+					$query = "UPDATE users SET username = '$username', sex = '$sex', position = '$position' WHERE user_id = $userId";
+					$result = mysqli_query($conn, $query);
+
+					if (!$result) {
+						echo "<script>alert('Erorr update user!')</script>";
+					} else {
+						header('Location: database.php');
+					}
+				}
 			}
 		}
 
@@ -301,7 +329,7 @@
 
 
 	<div class="w-100 d-flex justify-content-center my-5">
-		<form action="database.php" method="POST" class="w-50">
+		<form method="POST" class="w-50">
 			<input type="hidden" name="id" value="<?php echo $user_id; ?>">
 			<div class="form-group mb-3">
 				<label>Username:</label>
