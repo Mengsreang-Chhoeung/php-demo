@@ -1,6 +1,8 @@
 <?php
 	$pageTitle = "File Upload";
 	include_once 'assets/header.php';
+   $file_name_value = "";
+   $file_name_error_required = "";
 ?>
 
 <?php
@@ -23,9 +25,16 @@
             if ($fileSize < 26214400) {
                $fileNameUUID = uniqid('', true) . "." . $fileActualExt;
                $fileDestination = "img/" . $fileNameUUID;
-               move_uploaded_file($fileTmpName, $fileDestination);
                try {
-                  $query = "INSERT INTO file_upload(name, url, size, type, tmp) VALUES ('$fileName', '$fileNameUUID', $fileSize, '$fileType', '$fileTmpName')";
+                  move_uploaded_file($fileTmpName, $fileDestination);
+                  $queryFileNameExists = "SELECT file_id FROM file_upload WHERE BINARY name = '$fileName'";
+                  $resultQueryFileNameExists = mysqli_query($conn, $queryFileNameExists);
+                  if (mysqli_num_rows($resultQueryFileNameExists) > 0) {
+                     $query = "INSERT INTO file_upload(name, url, size, type, tmp) VALUES ('$fileNameUUID', '$fileNameUUID', $fileSize, '$fileType', '$fileTmpName')";
+                  } else {
+                     $query = "INSERT INTO file_upload(name, url, size, type, tmp) VALUES ('$fileName', '$fileNameUUID', $fileSize, '$fileType', '$fileTmpName')";
+                  }
+                  
                   $result = mysqli_query($conn, $query);
                   if (!$result) {
                      echo "<script>alert('Erorr uploading file!')</script>";
@@ -60,8 +69,8 @@
             $fullFileUrl = getcwd() . '/img/' . $fileUrl;
          }
          if (file_exists($fullFileUrl)) {
-            unlink($fullFileUrl);
             try {
+               unlink($fullFileUrl);
                $queryDelete = "DELETE FROM file_upload WHERE file_id = $fileID";
                $resultQueryDelete = mysqli_query($conn, $queryDelete);
                if (!$resultQueryDelete) {
@@ -153,18 +162,47 @@
 <?php
    if (isset($_POST['edit_file_name'])) {
       $file_id = $_POST['fileid'];
-      $file_name = $_POST['name'];
+      $file_name = mysqli_real_escape_string($conn, $_POST['name']);
+      $file_name_value = $file_name;
+
+      if (empty($file_name)) $file_name_error_required = "File name is required!";
 
       $queryExists = "SELECT * FROM file_upload WHERE file_id = $file_id LIMIT 1";
       $resultQueryExists = mysqli_query($conn, $queryExists);
 
       if (mysqli_num_rows($resultQueryExists) > 0) {
-         $queryUpdate = "UPDATE file_upload SET name='$file_name' WHERE file_id = $file_id LIMIT 1";
-         $resultQueryUpdate = mysqli_query($conn, $queryUpdate);
-         if (!$resultQueryUpdate) {
-            echo "<script>alert('Erorr updating file name!')</script>";
-         } else {
-            header('Location: index.php');
+         while ($row = mysqli_fetch_assoc($resultQueryExists)) {
+            $filename = $row['name'];
+         }
+         try {
+            $queryFileNameExists = "SELECT file_id FROM file_upload WHERE BINARY name = '$file_name'";
+            $resultQueryFileNameExists = mysqli_query($conn, $queryFileNameExists);
+            if (!empty($file_name)) {
+               if ($file_name !== $filename) {
+                  if (mysqli_num_rows($resultQueryFileNameExists) > 0) {
+                     $file_name_error_required = "File name already exists!";
+                  } else {
+                     $queryUpdate = "UPDATE file_upload SET name='$file_name' WHERE file_id = $file_id LIMIT 1";
+                     $resultQueryUpdate = mysqli_query($conn, $queryUpdate);
+                     if (!$resultQueryUpdate) {
+                        echo "<script>alert('Erorr updating file name!')</script>";
+                     } else {
+                        header('Location: index.php');
+                     }
+                  }
+               } else {
+                  $queryUpdate = "UPDATE file_upload SET name='$file_name' WHERE file_id = $file_id LIMIT 1";
+                  $resultQueryUpdate = mysqli_query($conn, $queryUpdate);
+                  if (!$resultQueryUpdate) {
+                     echo "<script>alert('Erorr updating file name!')</script>";
+                  } else {
+                     header('Location: index.php');
+                  }
+               }
+            }
+            
+         } catch (Exception $e) {
+            throw Exception($e);
          }
       } else {
          echo "File not found!";
@@ -184,7 +222,8 @@
                <input type="hidden" name="fileid" class="form-control file_id">
                <div class="mb-3">
                  <label for="fileName" class="form-label">File Name:</label>
-                 <input type="text" name="name" class="form-control file_name">
+                 <input type="text" name="name" class="form-control file_name" value="<?= $file_name_value; ?>">
+                 <small class="text-danger"><?= $file_name_error_required; ?></small>
                </div>
             </div>
             <div class="modal-footer">
