@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 22, 2022 at 01:35 AM
+-- Generation Time: Mar 23, 2022 at 01:06 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.0
 
@@ -41,16 +41,17 @@ CREATE TABLE `file_upload` (
 --
 
 INSERT INTO `file_upload` (`file_id`, `name`, `url`, `size`, `type`, `tmp`) VALUES
-(24, '80300912_1035691676768139_395859078313672704_n.jpg', '6238be5b3d1be8.24109699.jpg', 109353, 'image/jpeg', 'C:xampp	mpphp85CC.tmp'),
-(25, '126887902_1257220564650430_3527480493471334927_n.jpg', '6238be5ee07ed2.93097169.jpg', 203444, 'image/jpeg', 'C:xampp	mpphp9425.tmp'),
-(26, '121171017_1197535020618985_9039124390090660935_n.jpg', '6238be616768d5.96273368.jpg', 334657, 'image/jpeg', 'C:xampp	mpphp9E09.tmp'),
-(27, '213866288_1403911786647973_240886469070456647_n.jpg', '6238be6400ed41.31502861.jpg', 239859, 'image/jpeg', 'C:xampp	mpphpA80D.tmp'),
-(28, 'kosoma-cute-picture', '6238be66b98925.74633622.jpg', 147138, 'image/jpeg', 'C:xampp	mpphpB2DB.tmp'),
-(29, 'stella', '6238be69980377.05947552.jpg', 207315, 'image/jpeg', 'C:xampp	mpphpBDF8.tmp'),
-(30, 'kosoma-picture', '6238be6c655d52.23682195.jpg', 268102, 'image/jpeg', 'C:xampp	mpphpC8E6.tmp'),
-(31, '267740308_1570297319974236_5875240066312448560_n.jpg', '6238be6f42b3a0.81137031.jpg', 176892, 'image/jpeg', 'C:xampp	mpphpD422.tmp'),
-(32, '272451277_1594508000886501_3208303632081154135_n.jpg', '6238be71a22e27.77987273.jpg', 304399, 'image/jpeg', 'C:xampp	mpphpDD6A.tmp'),
-(33, '272863819_1545297425842741_7443624197943030154_n.jpg', '6238be740474f1.68401387.jpg', 203968, 'image/jpeg', 'C:xampp	mpphpE6A2.tmp');
+(41, '80300912_1035691676768139_395859078313672704_n.jpg', '623b0b8de6cb66.63217050.jpg', 109353, 'image/jpeg', 'C:xampp	mpphp13BA.tmp'),
+(42, '121171017_1197535020618985_9039124390090660935_n.jpg', '623b0b919b7e60.05098983.jpg', 334657, 'image/jpeg', 'C:xampp	mpphp2232.tmp'),
+(43, '265706355_1565478493789452_8876381265626645311_n.jpg', '623b0b94d1c2a6.42323159.jpg', 207315, 'image/jpeg', 'C:xampp	mpphp2EC6.tmp'),
+(44, '272863819_1545297425842741_7443624197943030154_n.jpg', '623b0b9d7f43e4.18695507.jpg', 203968, 'image/jpeg', 'C:xampp	mpphp5088.tmp'),
+(45, '208259272_1398547327184419_5811357213444465411_n.jpg', '623b0ba25af3a0.37870339.jpg', 289195, 'image/jpeg', 'C:xampp	mpphp6394.tmp'),
+(46, '196315270_1391418974563921_7703925099341393779_n.jpg', '623b0ba7997d39.19463273.jpg', 308992, 'image/jpeg', 'C:xampp	mpphp7807.tmp'),
+(47, '184176602_1372967659742386_1050133250918279293_n.jpg', '623b0babded675.49181154.jpg', 260369, 'image/jpeg', 'C:xampp	mpphp88D1.tmp'),
+(48, '213866288_1403911786647973_240886469070456647_n.jpg', '623b0bff9ee513.23442046.jpg', 239859, 'image/jpeg', 'C:xampp	mpphpCFF8.tmp'),
+(49, '218027641_1414480078924477_7005390163986436855_n.jpg', '623b0c0790b543.11256434.jpg', 268102, 'image/jpeg', 'C:xampp	mpphpEEFA.tmp'),
+(50, '222598172_1417509701954848_1240485756943828007_n.jpg', '623b0c11eb7d69.29338319.jpg', 538085, 'image/jpeg', 'C:xampp	mpphp1782.tmp'),
+(51, '211898506_1403910143314804_5528927128169898935_n.jpg', '623b0c1a049797.91535531.jpg', 147138, 'image/jpeg', 'C:xampp	mpphp3702.tmp');
 
 -- --------------------------------------------------------
 
@@ -112,7 +113,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `file_upload`
 --
 ALTER TABLE `file_upload`
-  MODIFY `file_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `file_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT for table `users`

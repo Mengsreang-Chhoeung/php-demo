@@ -120,11 +120,8 @@
                   ?>
                      <div class="col">
                         <img src="img/<?= $file_url; ?>" fileid="<?= $file_id; ?>" title="<?= $file_name; ?>" class="gallery-item" alt="<?= $file_name; ?>">
-                        <div class="w-100 bg-light p-3 d-flex align-items-center justify-content-between">
-                           <button class="btn btn-warning w-50 edit_file_name" style="width: 45%;">
-                              <i class="fas fa-edit"></i>
-                           </button>
-                           <a class="btn btn-danger" href="index.php?delete=<?= $file_id; ?>" style="width: 45%;">
+                        <div class="w-100 bg-light p-3">
+                           <a class="btn btn-danger" href="index.php?delete=<?= $file_id; ?>" style="width: 100%;">
                               <i class="fas fa-trash-alt"></i>
                            </a>
                         </div>
@@ -156,82 +153,6 @@
          <img src="img/1.jpg" class="modal-img" alt="modal img">
       </div>
     </div>
-  </div>
-</div>
-
-<?php
-   if (isset($_POST['edit_file_name'])) {
-      $file_id = $_POST['fileid'];
-      $file_name = mysqli_real_escape_string($conn, $_POST['name']);
-      $file_name_value = $file_name;
-
-      if (empty($file_name)) $file_name_error_required = "File name is required!";
-
-      $queryExists = "SELECT * FROM file_upload WHERE file_id = $file_id LIMIT 1";
-      $resultQueryExists = mysqli_query($conn, $queryExists);
-
-      if (mysqli_num_rows($resultQueryExists) > 0) {
-         while ($row = mysqli_fetch_assoc($resultQueryExists)) {
-            $filename = $row['name'];
-         }
-         try {
-            $queryFileNameExists = "SELECT file_id FROM file_upload WHERE BINARY name = '$file_name'";
-            $resultQueryFileNameExists = mysqli_query($conn, $queryFileNameExists);
-            if (!empty($file_name)) {
-               if ($file_name !== $filename) {
-                  if (mysqli_num_rows($resultQueryFileNameExists) > 0) {
-                     $file_name_error_required = "File name already exists!";
-                  } else {
-                     $queryUpdate = "UPDATE file_upload SET name='$file_name' WHERE file_id = $file_id LIMIT 1";
-                     $resultQueryUpdate = mysqli_query($conn, $queryUpdate);
-                     if (!$resultQueryUpdate) {
-                        echo "<script>alert('Erorr updating file name!')</script>";
-                     } else {
-                        header('Location: index.php');
-                     }
-                  }
-               } else {
-                  $queryUpdate = "UPDATE file_upload SET name='$file_name' WHERE file_id = $file_id LIMIT 1";
-                  $resultQueryUpdate = mysqli_query($conn, $queryUpdate);
-                  if (!$resultQueryUpdate) {
-                     echo "<script>alert('Erorr updating file name!')</script>";
-                  } else {
-                     header('Location: index.php');
-                  }
-               }
-            }
-            
-         } catch (Exception $e) {
-            throw Exception($e);
-         }
-      } else {
-         echo "File not found!";
-      }
-   }
-?>
-
-<!-- Modal Edit -->
-<div class="modal fade" id="edit-modal" tabindex="1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content">
-         <form method="POST">
-            <div class="modal-header">
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-               <input type="hidden" name="fileid" class="form-control file_id">
-               <div class="mb-3">
-                 <label for="fileName" class="form-label">File Name:</label>
-                 <input type="text" name="name" class="form-control file_name" value="<?= $file_name_value; ?>">
-                 <small class="text-danger"><?= $file_name_error_required; ?></small>
-               </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary" name="edit_file_name">Save changes</button>
-            </div>
-         </form>
-      </div>
   </div>
 </div>
 
