@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 23, 2022 at 01:06 PM
+-- Generation Time: Mar 25, 2022 at 01:30 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.0
 
@@ -20,6 +20,27 @@ SET time_zone = "+00:00";
 --
 -- Database: `demo`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `categories`
+--
+
+CREATE TABLE `categories` (
+  `cat_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `cat_name` varchar(30) NOT NULL,
+  `cat_notes` varchar(150) DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `categories`
+--
+
+INSERT INTO `categories` (`cat_id`, `created_at`, `cat_name`, `cat_notes`, `deleted_at`) VALUES
+(1, '2022-03-24 23:50:49', 'Category One', 'Hello Category One', NULL);
 
 -- --------------------------------------------------------
 
@@ -93,6 +114,13 @@ INSERT INTO `users` (`user_id`, `username`, `sex`, `position`) VALUES
 --
 
 --
+-- Indexes for table `categories`
+--
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`cat_id`),
+  ADD UNIQUE KEY `cat_name` (`cat_name`);
+
+--
 -- Indexes for table `file_upload`
 --
 ALTER TABLE `file_upload`
@@ -108,6 +136,12 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `categories`
+--
+ALTER TABLE `categories`
+  MODIFY `cat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `file_upload`
