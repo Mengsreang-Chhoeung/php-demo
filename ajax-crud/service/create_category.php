@@ -1,5 +1,6 @@
 <?php
 	include_once '../config/database_config.php';
+    global $conn;
 
 	// any variable for decorate
 	$error_category_name = "";
@@ -35,7 +36,7 @@
 				}
 			}
 		}
-	}	
+	}
 
 	if ($error > 0) {
 		$data = array(
@@ -49,4 +50,3 @@
 	}
 
 	echo json_encode($data);
-?>

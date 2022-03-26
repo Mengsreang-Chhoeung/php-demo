@@ -1,4 +1,4 @@
-<?php $page_title = "Home | Ajax Crud"; include_once './assets/header.php'; ?>
+<?php $page_title = "Home | Ajax Crud"; include_once './assets/header.php'; global $conn, $base_url; ?>
 
 <div class="w-100 d-flex justify-content-center mt-5">
 	<button class="btn btn-primary create_category_btn" type="button"><i class="fa-solid fa-square-plus"></i> Create Category</button>
@@ -52,11 +52,11 @@
 								<td><?php echo $category_name; ?></td>
 								<td><?php echo $category_notes; ?></td>
 								<td class="d-flex align-items-center">
-									<a class="btn btn-warning" href="database.php?edit=<?php= $category_id; ?>">Edit</a>
+									<a class="btn btn-warning" href="database.php?edit=<?= $category_id; ?>">Edit</a>
 									<div style="width: 10px;"></div>
-									<a class="btn btn-info" href="database2.php?detail=<?php= $category_id; ?>">Detail</a>
+									<a class="btn btn-info" href="database2.php?detail=<?= $category_id; ?>">Detail</a>
 									<div style="width: 10px;"></div>
-									<a class="btn btn-danger" href="database.php?delete=<?php= $category_id; ?>">Delete</a>
+									<a class="btn btn-danger" href="database.php?delete=<?= $category_id; ?>">Delete</a>
 								</td>
 							</tr>
 						<?php
@@ -132,43 +132,36 @@
 
 		// Create category using Ajax
 		const createCategoryForm = $("#create_category_form");
+		const createCategoryFormAction = "<?= $base_url; ?>/service/create_category.php";
+        const createCategoryFormMethod = createCategoryForm.attr("method");
+        const createCategoryFormData = $(this).serialize();
 		const categorySubmitBtn = $(".category_submit_btn");
 		const errorCategoryName = $("#error_category_name");
 		createCategoryForm.on('submit', function(e) {
 			e.preventDefault();
 			$.ajax({
-				url: "service/create_category.php",
-				method: "POST",
-				data: $(this).serialize(),
-				dataType: "json",
-				contentType: "application/json",
-				beforeSend: function() {
-					categorySubmitBtn.val("Validate...");
-					categorySubmitBtn.attr("disabled", "disabled");
-				},
-				complete: function(res) {
-					if (res.responseJSON.error === true) {
-						categorySubmitBtn.val("Create");
-						categorySubmitBtn.attr("disabled", false);
-						errorCategoryName.text(res.responseJSON.error_category_name);
-					}
-				},
-				// succuss: function(data) {
-				// 	if (data.succuss) {
-				// 		location.href = "";
-				// 	}
-				// 	if (data.error) {
-				// 		const myModal = new bootstrap.Modal(createCategoryModal);
-				// 		myModal.show();
-				// 		categorySubmitBtn.val("Create");
-				// 		categorySubmitBtn.attr("disabled", false);
-				// 		if (data.error_category_name !== "") {
-				// 			errorCategoryName.text(data.error_category_name);
-				// 		} else {
-				// 			errorCategoryName.text("");
-				// 		}
-				// 	}
-				// }
+				url: createCategoryFormAction,
+				method: createCategoryFormMethod,
+				data: createCategoryFormData,
+                dataType: "json",
+                beforeSend() {
+                    categorySubmitBtn.val("Validate...");
+                    categorySubmitBtn.attr("disabled", true);
+                },
+                success: function (data) {
+                    console.log("Hello Success: ", data);
+                    categorySubmitBtn.val("Create");
+                    categorySubmitBtn.attr("disabled", false);
+                    if (data.error_category_name !== '') {
+                        errorCategoryName.text(data.error_category_name);
+                    } else {
+                        errorCategoryName.text('');
+                    }
+                },
+                error: function (err, errs) {
+                    console.log("Hello Err: ", err);
+                    console.log("Hello Errs: ", errs);
+                }
 			});
 		});
 	});
