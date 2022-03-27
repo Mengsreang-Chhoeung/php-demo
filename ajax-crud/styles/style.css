@@ -1,0 +1,31 @@
+:root {
+    --bg-danger: #dc3545;
+    --bg-success: #198754;
+    --box-shadow-danger: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    --box-shadow-success: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+.required > i {
+    color: var(--bg-danger);
+    font-size: 13px;
+}
+
+input[type='text'].success,
+textarea.category_notes_input.success {
+    border-color: var(--bg-success);
+}
+
+input[type='text'].success:focus,
+textarea.category_notes_input.success:focus {
+    box-shadow: var(--box-shadow-success);
+}
+
+input[type='text'].error,
+textarea.category_notes_input.error {
+    border-color: var(--bg-danger);
+}
+
+input[type='text'].error:focus,
+textarea.category_notes_input.error:focus {
+    box-shadow: var(--box-shadow-danger);
+}

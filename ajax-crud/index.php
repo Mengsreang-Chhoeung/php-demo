@@ -102,13 +102,14 @@
 	      	<form method="POST" id="create_category_form">
 	      		<div class="modal-body">
 		        	<div class="form-group mb-3">
-						<label>Category Name:</label>
-						<input type="text" name="cat_name" class="form-control">
+						<label>Category Name: <span class="required"><i class="fa-solid fa-asterisk"></i></span></label>
+						<input type="text" name="cat_name" class="form-control category_name_input">
 						<small class="text-danger" id="error_category_name"></small>
 					</div>
 					<div class="form-group mb-3">
 						<label>Notes:</label>
-						<textarea class="form-control" name="cat_notes"></textarea>
+						<textarea class="form-control category_notes_input" name="cat_notes"></textarea>
+                        <small class="text-danger" id="error_category_notes"></small>
 					</div>
 		      	</div>
 		      	<div class="modal-footer">
@@ -130,39 +131,91 @@
 			myModal.show();
 		});
 
+        // Validate create category modal when input...
+        const categoryNameInput = $(".category_name_input");
+        const errorCategoryName = $("#error_category_name");
+        const categoryNotesInput = $(".category_notes_input");
+        const errorCategoryNotes = $("#error_category_notes");
+        categoryNameInput.on("input", function () {
+            const categoryNameValue = $(this).val();
+            if (categoryNameValue === '') {
+                categoryNameInput.addClass("error");
+                errorCategoryName.text("Category name is required!");
+            } else if (categoryNameValue.length > 30) {
+                categoryNameInput.addClass("error");
+                errorCategoryName.text("Category name cannot be longer than 30 characters!");
+            } else {
+                categoryNameInput.removeClass("error");
+                categoryNameInput.addClass("success");
+                errorCategoryName.text("");
+            }
+        });
+        categoryNotesInput.on("input", function () {
+            const categoryNotesValue = $(this).val();
+            if (categoryNotesValue.length > 150) {
+                categoryNotesInput.addClass("error");
+                errorCategoryNotes.text("Category notes cannot be longer than 150 characters!");
+            } else {
+                categoryNotesInput.removeClass("error");
+                categoryNotesInput.addClass("success");
+                errorCategoryNotes.text("");
+            }
+        });
+
 		// Create category using Ajax
 		const createCategoryForm = $("#create_category_form");
-		const createCategoryFormAction = "<?= $base_url; ?>/service/create_category.php";
-        const createCategoryFormMethod = createCategoryForm.attr("method");
-        const createCategoryFormData = $(this).serialize();
-		const categorySubmitBtn = $(".category_submit_btn");
-		const errorCategoryName = $("#error_category_name");
 		createCategoryForm.on('submit', function(e) {
 			e.preventDefault();
-			$.ajax({
-				url: createCategoryFormAction,
-				method: createCategoryFormMethod,
-				data: createCategoryFormData,
-                dataType: "json",
-                beforeSend() {
-                    categorySubmitBtn.val("Validate...");
-                    categorySubmitBtn.attr("disabled", true);
-                },
-                success: function (data) {
-                    console.log("Hello Success: ", data);
-                    categorySubmitBtn.val("Create");
-                    categorySubmitBtn.attr("disabled", false);
-                    if (data.error_category_name !== '') {
-                        errorCategoryName.text(data.error_category_name);
-                    } else {
-                        errorCategoryName.text('');
-                    }
-                },
-                error: function (err, errs) {
-                    console.log("Hello Err: ", err);
-                    console.log("Hello Errs: ", errs);
-                }
-			});
+            const createCategoryFormAction = "<?= $base_url; ?>/service/create_category.php";
+            const createCategoryFormMethod = createCategoryForm.attr("method");
+            const createCategoryFormData = $(this).serialize();
+            const categorySubmitBtn = $(".category_submit_btn");
+            const categoryNameValue = categoryNameInput.val();
+            const categoryNotesValue = categoryNotesInput.val();
+            if (categoryNameValue === '') {
+                categoryNameInput.addClass("error");
+                errorCategoryName.text("Category name is required!");
+            } else if (categoryNameValue.length > 30 || categoryNotesValue.length > 150) {
+                categoryNameInput.addClass("error");
+                errorCategoryName.text("Category name cannot be longer than 30 characters!");
+                categoryNotesInput.addClass("error");
+                errorCategoryNotes.text("Category notes cannot be longer than 150 characters!");
+            } else {
+                categoryNameInput.removeClass("error");
+                categoryNameInput.addClass("success");
+                errorCategoryName.text("");
+                categoryNotesInput.removeClass("error");
+                categoryNotesInput.addClass("success");
+                errorCategoryNotes.text("");
+                $.ajax({
+                    url: createCategoryFormAction,
+                    method: createCategoryFormMethod,
+                    data: createCategoryFormData,
+                    dataType: "json",
+                    beforeSend() {
+                        categorySubmitBtn.val("Validate...");
+                        categorySubmitBtn.attr("disabled", true);
+                    },
+                    success: function (data) {
+                        categorySubmitBtn.val("Create");
+                        categorySubmitBtn.attr("disabled", false);
+
+                        if (data.success === true) {
+                            location.href = "<?= $base_url; ?>";
+                        }
+
+                        if (data.success === false && data.category_name_error !== "") {
+                            errorCategoryName.text(data.category_name_error);
+                        } else {
+                            errorCategoryName.text("");
+                        }
+
+                        if (data.success === false && data.error !== "") {
+                            alert(data.error);
+                        }
+                    },
+                });
+            }
 		});
 	});
 </script>

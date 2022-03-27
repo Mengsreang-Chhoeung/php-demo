@@ -1,6 +1,7 @@
 <?php 
 	ob_start();
 	include_once './config/index.php';
+    global $page_title;
 ?>
 
 <!DOCTYPE html>
@@ -15,4 +16,6 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 	<!-- jQuery -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Link CSS File -->
+    <link rel="stylesheet" href="./styles/style.css">
 </head>
