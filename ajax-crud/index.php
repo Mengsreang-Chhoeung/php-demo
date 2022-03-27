@@ -175,9 +175,10 @@
             if (categoryNameValue === '') {
                 categoryNameInput.addClass("error");
                 errorCategoryName.text("Category name is required!");
-            } else if (categoryNameValue.length > 30 || categoryNotesValue.length > 150) {
+            } else if (categoryNameValue.length > 30) {
                 categoryNameInput.addClass("error");
                 errorCategoryName.text("Category name cannot be longer than 30 characters!");
+            } else if (categoryNotesValue.length > 150) {
                 categoryNotesInput.addClass("error");
                 errorCategoryNotes.text("Category notes cannot be longer than 150 characters!");
             } else {
