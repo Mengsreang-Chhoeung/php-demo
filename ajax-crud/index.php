@@ -1,4 +1,4 @@
-<?php $page_title = "Home | Ajax Crud"; include_once './assets/header.php'; global $conn, $base_url; ?>
+<?php $page_title = "Home | Ajax Crud"; include_once './assets/header.php'; global $conn, $base_url, $category_url; ?>
 
 <div class="w-100 d-flex justify-content-center mt-5">
 	<button class="btn btn-primary create_category_btn" type="button"><i class="fa-solid fa-square-plus"></i> Create Category</button>
@@ -166,7 +166,7 @@
 		const createCategoryForm = $("#create_category_form");
 		createCategoryForm.on('submit', function(e) {
 			e.preventDefault();
-            const createCategoryFormAction = "<?= $base_url; ?>/service/create_category.php";
+            const createCategoryFormAction = "<?= $category_url; ?>";
             const createCategoryFormMethod = createCategoryForm.attr("method");
             const createCategoryFormData = $(this).serialize();
             const categorySubmitBtn = $(".category_submit_btn");
