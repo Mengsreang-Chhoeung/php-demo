@@ -18,7 +18,7 @@
 </div>
 
 <div class="w-100 d-flex justify-content-center mt-3">
-	<table class="table table-bordered w-50 table-hover">
+	<table class="table table-bordered w-75 table-hover">
 		<thead>
 			<tr>
 				<th>ID</th>
@@ -47,10 +47,10 @@
 
 						?>
 							<tr>
-								<td><?php echo $category_id; ?></td>
-								<td><?php echo $created_at; ?></td>
-								<td><?php echo $category_name; ?></td>
-								<td><?php echo $category_notes; ?></td>
+								<td><?= $category_id; ?></td>
+								<td><?= $created_at; ?></td>
+								<td><?= $category_name; ?></td>
+								<td title="<?= $category_notes ?>"><?= mb_strimwidth($category_notes, 0, 50, "..."); ?></td>
 								<td class="d-flex align-items-center">
 									<a class="btn btn-warning" href="database.php?edit=<?= $category_id; ?>">Edit</a>
 									<div style="width: 10px;"></div>
@@ -67,7 +67,7 @@
 	</table>
 </div>
 
-<nav class="w-100 d-flex justify-content-center align-items-center">
+<nav class="w-100 mb-5 d-flex justify-content-center align-items-center">
 	<ul class="pagination m-0 p-0">
 		<li class="page-item disabled">
 		    <a class="page-link" href="#">Previous</a>
@@ -206,8 +206,10 @@
                         }
 
                         if (data.success === false && data.category_name_error !== "") {
+                            categoryNameInput.addClass("error");
                             errorCategoryName.text(data.category_name_error);
                         } else {
+                            categoryNameInput.removeClass("error");
                             errorCategoryName.text("");
                         }
 
