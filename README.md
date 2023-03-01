@@ -91,8 +91,8 @@ The official **PHP** website (PHP.net) has installation instructions for PHP: [h
 
 ### 📜 References
 
-- [W3Schools](https://www.w3schools.com/c)
-- [Javatpoint](https://www.javatpoint.com/c-programming-language-tutorial)
+- [W3Schools](https://www.w3schools.com/php)
+- [Javatpoint](https://www.javatpoint.com/php-tutorial)
 
 ### 🤝 Contributors
 
